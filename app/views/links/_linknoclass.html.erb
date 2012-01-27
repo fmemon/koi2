@@ -1,0 +1,29 @@
+			 <div class="scoring">
+				<%= link_to image_tag('up_arrow.gif', :size => '25x25'), upvote_link_path(link), :method => :put, :class=>"arrow up" %>
+				<div class="link-numbers">
+				<span class="rank"><%= @index %></span> 
+				<span class="totalscore">				[<%= link.votes.sum(:score) %>]</span>
+				</div>
+				<%= link_to image_tag('down_arrow.gif', :size => '25x25'), downvote_link_path(link), :method => :put, :class=>"arrow down" %>  
+			</div>
+			
+			<div class="link-info">
+			
+							<%= link_to image_tag(link.thumbnail, :size => '90x70'), link.url, :method => :put, :class=>"thumbnail" %>      
+    
+				<div class="link-text">
+					<p class="title">
+												<%= link_to link.title, link.url, :class=>"title" %>  
+
+						<span class="domain">(<%= link_to url_takes_a_bath(link.url), link.url%>)</span>
+					</p>
+					
+					<p class="tagline">submitted 
+					<%= time_ago_in_words(link.created_at, Time.now) %> ago by <%= link_to fu_robots(link.user.email), link.user %>
+
+						<span class="userattrs"></span> to <a class="subreddit hover" href="http://www.reddit.com/r/worldnews/"><%= link.category %></a>
+					</p>
+				
+						<a target="_parent" href="http://www.reddit.com/r/worldnews/comments/okq5x/over_1000_iranian_students_apply_to_change_major/" class="comments"><%= pluralize(link.comments.count, 'comment') %></a>
+				</div>
+			</div>

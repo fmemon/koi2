@@ -1,0 +1,8 @@
+ <% links.each_with_index do |link, index| %>
+				<div class='thing link'>
+<% @index = index.to_i + 1 %>
+		<%= render :partial => 'linknoclass', :locals => {:link => link, :index => @index}  %>
+				</div>
+	<% end %>
+
+
