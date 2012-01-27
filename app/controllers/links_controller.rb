@@ -23,7 +23,7 @@ class LinksController < ApplicationController
    @links = Link.find(:all, 
        :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"],
                        :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.created_at, links.updated_at, links.user_id, links.short_url',
+                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.created_at, links.updated_at, links.user_id, links.short_url',
                        :order => 'SUM(COALESCE(votes.score, 0)) DESC')
                        
     
@@ -35,7 +35,7 @@ class LinksController < ApplicationController
       end      
 			@links = Link.find(:all, 
 							 :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.created_at, links.updated_at, links.user_id, links.short_url',
+                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.created_at, links.updated_at, links.user_id, links.short_url',
 							 :order => 'SUM(COALESCE(votes.score, 0)) DESC')
     else
       @found = true
@@ -173,7 +173,7 @@ class LinksController < ApplicationController
    @links = Link.find(:all, 
        :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"],
                        :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.created_at, links.updated_at, links.user_id, links.short_url',
+                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.created_at, links.updated_at, links.user_id, links.short_url',
                        :order => 'SUM(COALESCE(votes.score, 0)) DESC')
                        
     
@@ -185,7 +185,7 @@ class LinksController < ApplicationController
       end      
 			@links = Link.find(:all, 
 							 :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.created_at, links.updated_at, links.user_id, links.short_url',
+                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.created_at, links.updated_at, links.user_id, links.short_url',
 							 :order => 'SUM(COALESCE(votes.score, 0)) DESC')
     else
       @found = true
