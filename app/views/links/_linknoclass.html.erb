@@ -24,6 +24,7 @@
 						<span class="userattrs"></span> to <a class="subreddit hover" href="http://www.reddit.com/r/worldnews/"><%= link.category %></a>
 					</p>
 				
-						<a target="_parent" href="http://www.reddit.com/r/worldnews/comments/okq5x/over_1000_iranian_students_apply_to_change_major/" class="comments"><%= pluralize(link.comments.count, 'comment') %></a>
+				  <%= link_to pluralize(link.comments.count.to_s, 'comment'), link %></h3>
+
 				</div>
 			</div>
