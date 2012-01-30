@@ -3,40 +3,28 @@ class LinksController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :search]
 
   def index
-#   	@promoted_link = Link.all.first
-#   	@promoted_link.promoted = true
-#   	@promoted_link.save
-#     @links = Link.find(:all, 
-#                        :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-#                        :group => 'links.id, links.url, links.title, links.created_at, links.updated_at, links.user_id, links.short_url',
-#                        :order => 'SUM(COALESCE(votes.score, 0)) DESC')
-
-   #for link submission
+  
+  # so user can submit a new link from the index page
    @link = Link.new
 
+  # reset values
     @links = nil
     @found = false
+    @promoted_link = nil
+    fornotice =  " for '#{params[:term]}'"  
     
-    #@links = Links.find(:all)
-    #, :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"])
-    
- #   @links = Link.find(:all, 
-#        :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"],
-#                        :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-#                        :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.category, links.created_at, links.updated_at, links.user_id, links.short_url',
-#                        :order => 'SUM(COALESCE(votes.score, 0)) DESC')
-               
-#scope :voted_links, includes(:votes).group('link_id').order('SUM(COALESCE(votes.score, 0)) DESC')
-    @links = Link.voted_links
-    if @links.empty?
-      if params[:term].blank? 
+    if params[:term].blank? 
+       @links = Link.voted_links
         flash.now[:notice] ="Please enter in a search term to search" 
-      else
-        flash.now[:notice] ="Sorry nothing found for #{params[:term]}" 
-      end      
-         @links = Link.all
     else
-      @found = true
+        @links = Link.by_searchterm(params[:term])
+         if @links.empty?
+           @links = Link.voted_links
+            flash.now[:notice] ="Sorry nothing found" + fornotice 
+         else
+          flash.now[:notice] ="#{@links.length} " +  (@links.length> 1? 'links =' : 'link') + fornotice 
+           @found = true
+         end 
     end
 
     @promoted_link = Link.promoted_link
@@ -44,43 +32,28 @@ class LinksController < ApplicationController
     render :index, :links => @links,   	:promoted_link => @promoted_link 
   end
 
-
-
-
-
   def show
     @link = Link.find(params[:id])
     @user = current_user
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
   def new
     @link = Link.new
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
   def create
     @link = Link.new(params[:link])
     @link.user = current_user
 
-    respond_to do |format|
-      if @link.save!
-        format.html { redirect_to(links_index_url, flash[:notice] => 'Link was successfully added.') }
-      else
-        format.html { render :action => "new" }
+		if @link.save!
+			redirect_to(links_index_url, flash[:notice] => 'Link was successfully added.') 
+		else
+			render :action => "new" 
       end
-    end
   end
 
   def latest
     @links = Link.latest
-
     render :action => 'index'
   end
 
@@ -110,24 +83,6 @@ class LinksController < ApplicationController
         redirect_to(links_path, :notice =>  'Your vote have been changed to up.') 
       end
    end
-    
-    
-#    if !current_user.votes.where(:link_id => @link.id).empty?
-#    			@vote.save!
-#    			redirect_to(links_path, flash[:notice] => 'Your vote was added.') 
-#    else 
-#       @vote.update_attributes(:score => 1)
-#       redirect_to(links_path, :notice => 'Already voted up on this link') 
-#    end
-#     
-# 		begin
-# 			@vote.save!
-# 		rescue ActiveRecord::RecordInvalid => e
-# 			redirect_to(links_path, :notice => 'Already voted up on this link') 
-# 	  else
-# 	  		redirect_to(links_path, flash[:notice] => 'Your vote was added.') 
-# 		end
-		
 		
   end
 
@@ -156,40 +111,6 @@ class LinksController < ApplicationController
 					redirect_to(links_path, :notice =>  'Your vote have been changed to down.') 
 				end
 		 end
-  end
-  
-  def search
-  	@promoted_link = Link.all.first
-  	@promoted_link.promoted = true
-  	@promoted_link.save
-
-    @links = nil
-    @found = false
-    
-    #@links = Links.find(:all)
-    #, :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"])
-    
-   @links = Link.find(:all, 
-       :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"],
-                       :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.category, links.created_at, links.updated_at, links.user_id, links.short_url',
-                       :order => 'SUM(COALESCE(votes.score, 0)) DESC')
-                       
-    
-    if @links.empty?
-      if params[:term].blank? 
-        flash.now[:notice] ="Please enter in a search term to search" 
-      else
-        flash.now[:notice] ="Sorry nothing found for #{params[:term]}" 
-      end      
-			@links = Link.find(:all, 
-							 :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.category, links.created_at, links.updated_at, links.user_id, links.short_url',
-							 :order => 'SUM(COALESCE(votes.score, 0)) DESC')
-    else
-      @found = true
-    end
-    render :index, :links => @links,   	:promoted_link => @promoted_link 
   end
 
   end

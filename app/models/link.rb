@@ -38,9 +38,12 @@ class Link < ActiveRecord::Base
       last_link
   end
 
-scope :voted_links, includes(:votes).group('links.id, votes.id').order('SUM(COALESCE(votes.score, 0)) DESC')
+  scope :voted_links, includes(:votes).group('links.id, votes.id').order('SUM(COALESCE(votes.score, 0)) DESC')
 
-
+	def self.by_searchterm(q)
+		query = "%#{q}%".downcase
+		Link.voted_links.where('LOWER(title) LIKE ? OR LOWER(url) LIKE ?', query, query)
+	end
 
 end
 
