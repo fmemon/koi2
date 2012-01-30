@@ -1,4 +1,5 @@
 class Link < ActiveRecord::Base
+  
   before_save(:on => :create) do
    self.short_url = Googl.shorten(self.url).short_url #from Googl gem
   end
@@ -16,5 +17,46 @@ class Link < ActiveRecord::Base
   def to_param
     "#{id}-#{title.parameterize}"
   end
+  
+  #tried scope did not work with first attached
+ # scope :promoted_link,   where(:promoted => true).order("RANDOM()").first
+
+  def self.promoted_link
+      self.where(:promoted => true).order("RANDOM()").first || self.last_link_promoted
+      # have to return a link
+      #     @promoted_link = Link.last
+      #     if @promoted_link
+      #   	  @promoted_link.promoted = true
+      #   	  @promoted_link.save
+      #     end
+  end
+  
+  def self.last_link_promoted
+			last_link = Link.last
+			last_link.promoted = true
+      last_link.save
+      last_link
+  end
+
+scope :voted_links, includes(:votes).group('links.id, votes.id').order('SUM(COALESCE(votes.score, 0)) DESC')
+
+
 
 end
+
+# == Schema Information
+#
+# Table name: links
+#
+#  id         :integer         not null, primary key
+#  url        :string(255)
+#  title      :string(255)
+#  user_id    :integer
+#  short_url  :string(255)
+#  thumbnail  :string(255)
+#  promoted   :boolean
+#  category   :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+

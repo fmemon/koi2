@@ -20,34 +20,33 @@ class LinksController < ApplicationController
     #@links = Links.find(:all)
     #, :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"])
     
-   @links = Link.find(:all, 
-       :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"],
-                       :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.category, links.created_at, links.updated_at, links.user_id, links.short_url',
-                       :order => 'SUM(COALESCE(votes.score, 0)) DESC')
-                       
-    
+ #   @links = Link.find(:all, 
+#        :conditions => ['LOWER(title) LIKE ? OR LOWER(url) LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%"],
+#                        :joins => 'LEFT JOIN votes on votes.link_id = links.id',
+#                        :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.category, links.created_at, links.updated_at, links.user_id, links.short_url',
+#                        :order => 'SUM(COALESCE(votes.score, 0)) DESC')
+               
+#scope :voted_links, includes(:votes).group('link_id').order('SUM(COALESCE(votes.score, 0)) DESC')
+    @links = Link.voted_links
     if @links.empty?
       if params[:term].blank? 
         flash.now[:notice] ="Please enter in a search term to search" 
       else
         flash.now[:notice] ="Sorry nothing found for #{params[:term]}" 
       end      
-			@links = Link.find(:all, 
-							 :joins => 'LEFT JOIN votes on votes.link_id = links.id',
-                       :group => 'links.id, links.url, links.title,links.thumbnail, links.promoted, links.category, links.created_at, links.updated_at, links.user_id, links.short_url',
-							 :order => 'SUM(COALESCE(votes.score, 0)) DESC')
+         @links = Link.all
     else
       @found = true
     end
-    
-    @promoted_link = Link.all.first
-    if @promoted_link
-  	  @promoted_link.promoted = true
-  	  @promoted_link.save
-    end
+
+    @promoted_link = Link.promoted_link
+
     render :index, :links => @links,   	:promoted_link => @promoted_link 
   end
+
+
+
+
 
   def show
     @link = Link.find(params[:id])
