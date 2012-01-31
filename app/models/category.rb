@@ -1,6 +1,13 @@
 class Category < ActiveRecord::Base
   has_many :links
   
+  validates :name,   :presence => true, 
+																:uniqueness => {:case_sensitive => false},
+																:length => {:within => 2..40},
+																:format => { :with =>  /^[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9_]*$/ , 
+                                                      :message =>"must have at least one letter and contain only letters, digits, or underscores"} 
+
+
 end
 # == Schema Information
 #

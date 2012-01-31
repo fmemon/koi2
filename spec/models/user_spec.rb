@@ -3,12 +3,14 @@ require 'spec_helper'
 describe User do
   
   before(:each) do
-    @attr = { 
-      :name => "Example User",
-      :email => "user@example.com",
-      :password => "foobar",
-      :password_confirmation => "foobar"
-    }
+#     @attr = { 
+#       :name => "Example User",
+#       :email => "user@example.com",
+#       :password => "foobar",
+#       :password_confirmation => "foobar"
+#     }
+ @attr = Factory.attributes_for(:user)
+
   end
   
   it "should create a new instance given a valid attribute" do
