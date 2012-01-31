@@ -1,5 +1,5 @@
 class Vote < ActiveRecord::Base
-  attr_accessible :score
+  attr_accessible :score, :link_id, :user_id 
 
   belongs_to :link
   belongs_to :user
