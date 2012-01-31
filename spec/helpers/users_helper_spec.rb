@@ -11,5 +11,10 @@ require 'spec_helper'
 #   end
 # end
 describe UsersHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "get username from email address" do
+    it "get username from email address" do
+      #helper.concat_strings("this","that").should == "this that"
+      helper. fu_robots("farida@yahoo.com").should == "farida"
+    end
+  end
 end
