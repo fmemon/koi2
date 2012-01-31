@@ -21,7 +21,7 @@
 					<p class="tagline">submitted 
 					<%= time_ago_in_words(link.created_at, Time.now) %> ago by <%= link_to link.user.name, link.user %>
 
-						<span class="userattrs"></span> to <a class="subreddit hover" href="http://www.reddit.com/r/worldnews/"><%= link.category %></a>
+						<span class="userattrs"></span> to <a class="subreddit hover" href="http://www.reddit.com/r/worldnews/"><%= link.category.name %></a>
 					</p>
 				
 				  <%= link_to pluralize(link.comments.count.to_s, 'comment'), link %></h3>

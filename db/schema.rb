@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120127194723) do
+ActiveRecord::Schema.define(:version => 20120131041052) do
+
+  create_table "categories", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "comments", :force => true do |t|
     t.string   "commenter"
@@ -30,11 +36,12 @@ ActiveRecord::Schema.define(:version => 20120127194723) do
     t.string   "short_url"
     t.string   "thumbnail"
     t.boolean  "promoted"
-    t.string   "category"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "category_id"
   end
 
+  add_index "links", ["category_id"], :name => "index_links_on_category_id"
   add_index "links", ["user_id"], :name => "index_links_on_user_id"
 
   create_table "users", :force => true do |t|

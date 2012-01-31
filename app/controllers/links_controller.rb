@@ -6,6 +6,7 @@ class LinksController < ApplicationController
   
   # so user can submit a new link from the index page
    @link = Link.new
+    @categories = Category.all
 
   # reset values
     @links = nil
@@ -39,6 +40,7 @@ class LinksController < ApplicationController
 
   def new
     @link = Link.new
+    @categories = Category.all
   end
 
   def create

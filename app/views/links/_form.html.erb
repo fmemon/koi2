@@ -5,5 +5,8 @@
   <%= link_form.label :url %>
   <%= link_form.text_field :url, :value => 'http://' %><br />
 
+  <%= link_form.label :category %>
+  <%= link_form.collection_select(:category_id, @categories, :id, :name, :include_blank => "Please select") %><br />
+
   <%= link_form.submit :value => 'Submit Link' , :class => "submit_button" %>
 <% end %>

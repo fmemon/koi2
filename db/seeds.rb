@@ -11,3 +11,17 @@ puts 'New user created: ' << user.name
 Link.create url: "http://imgur.com/5LNsR", title: "Funny dog barking", user_id: 1, short_url: "http://goo.gl/sHtYr", thumbnail: "bbcT.png", promoted: true, category: "worldnews"
 Link.create url: "http://i.imgur.com/9Nlhm.jpg", title: "Sccientific Dog", user_id: 1, short_url: "http://goo.gl/q2ZH4", thumbnail: "bestwhichT.png", promoted: true, category: "funnies"
 Link.create url: "http://i.imgur.com/9Nlhm.jpg", title: "Happy Cat", user_id: 1, short_url: "http://goo.gl/q2ZH4", thumbnail: "bestwhichT.png", promoted: nil, category: "funnies"
+
+
+puts 'SETTING UP DEFAULT CATEGORIES'
+Category.create name: "WorldNews"
+Category.create name: "Sports"
+Category.create name: "Cats"
+Category.create name: "Dogs"
+Category.create name: "Weather"
+Category.create name: "Babies"
+Category.create name: "Food"
+Category.create name: "Shoes"
+Category.create name: "Nature"
+Category.create name: "Cars"
+puts 'Categories created'

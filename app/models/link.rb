@@ -9,9 +9,10 @@ class Link < ActiveRecord::Base
                     :length => { :minimum => 5, :maximum => 100 }
 
   belongs_to :user # foreign key - user_id
+  belongs_to :category # foreign key - category_id
   has_many :votes
   has_many :comments
-
+  
   scope :latest, order('created_at DESC').limit(10)
   scope :voted_links, includes(:votes).group('links.id, votes.id').order('SUM(COALESCE(votes.score, 0)) DESC')
 
@@ -41,15 +42,15 @@ end
 #
 # Table name: links
 #
-#  id         :integer         not null, primary key
-#  url        :string(255)
-#  title      :string(255)
-#  user_id    :integer
-#  short_url  :string(255)
-#  thumbnail  :string(255)
-#  promoted   :boolean
-#  category   :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  id          :integer         not null, primary key
+#  url         :string(255)
+#  title       :string(255)
+#  user_id     :integer
+#  short_url   :string(255)
+#  thumbnail   :string(255)
+#  promoted    :boolean
+#  created_at  :datetime
+#  updated_at  :datetime
+#  category_id :integer
 #
 
