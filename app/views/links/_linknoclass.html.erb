@@ -15,11 +15,11 @@
 					<p class="title">
 												<%= link_to link.title, link.url, :class=>"title" %>  
 
-						<span class="domain">(<%= link_to url_takes_a_bath(link.url), link.url%>)</span>
+						<span class="domain">(<%= link_to get_host_without_www(link.url), link.url%>)</span>
 					</p>
 					
 					<p class="tagline">submitted 
-					<%= time_ago_in_words(link.created_at, Time.now) %> ago by <%= link_to fu_robots(link.user.email), link.user %>
+					<%= time_ago_in_words(link.created_at, Time.now) %> ago by <%= link_to link.user.name, link.user %>
 
 						<span class="userattrs"></span> to <a class="subreddit hover" href="http://www.reddit.com/r/worldnews/"><%= link.category %></a>
 					</p>

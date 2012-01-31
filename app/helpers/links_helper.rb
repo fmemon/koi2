@@ -1,7 +1,13 @@
 module LinksHelper
 
-  def url_takes_a_bath(url)
-    URI.parse(url).host[/(?:www\.)?(.*)/,1]
+  def get_host_without_www(url)
+    URI.parse(url).host #=> "techcrunch.com" 
   end
+  
+    def get_username_from_email_address(email)
+    email =~ (/(.+)[@]/)
+    $1
+  end
+
 
 end
