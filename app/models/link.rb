@@ -13,22 +13,14 @@ class Link < ActiveRecord::Base
   has_many :comments
 
   scope :latest, order('created_at DESC').limit(10)
+  scope :voted_links, includes(:votes).group('links.id, votes.id').order('SUM(COALESCE(votes.score, 0)) DESC')
 
   def to_param
     "#{id}-#{title.parameterize}"
   end
-  
-  #tried scope did not work with first attached
- # scope :promoted_link,   where(:promoted => true).order("RANDOM()").first
 
   def self.promoted_link
       self.where(:promoted => true).order("RANDOM()").first || self.last_link_promoted
-      # have to return a link
-      #     @promoted_link = Link.last
-      #     if @promoted_link
-      #   	  @promoted_link.promoted = true
-      #   	  @promoted_link.save
-      #     end
   end
   
   def self.last_link_promoted
@@ -37,8 +29,6 @@ class Link < ActiveRecord::Base
       last_link.save
       last_link
   end
-
-  scope :voted_links, includes(:votes).group('links.id, votes.id').order('SUM(COALESCE(votes.score, 0)) DESC')
 
 	def self.by_searchterm(q)
 		query = "%#{q}%".downcase

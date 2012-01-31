@@ -11,25 +11,11 @@ class Vote < ActiveRecord::Base
   end
   
   def is_score_up?
-      if self.score == 1
-        puts "&&&&&&&&&&ITS UpALREADY"
-        p self.score
-        puts "&&&&&&&&&&ITS DOWN ALREADY"
-        return true 
-      else
-        return false
-      end
+      self.score == 1
   end
 
   def is_score_down?
-      if self.score == -1
-        puts "&&&&&&&&&&ITS DOWN ALREADY"
-        p self.score
-        puts "&&&&&&&&&&ITS DOWN ALREADY"
-        return true 
-      else
-        return false
-      end
+      self.score == -1
   end
 
 end

@@ -15,14 +15,14 @@ class LinksController < ApplicationController
     
     if params[:term].blank? 
        @links = Link.voted_links
-        flash.now[:notice] ="Please enter in a search term to search" 
+        flash[:success]  = "Please enter in a search term to search" 
     else
         @links = Link.by_searchterm(params[:term])
          if @links.empty?
            @links = Link.voted_links
-            flash.now[:notice] ="Sorry nothing found" + fornotice 
+           flash.now[:success] = "Sorry nothing found" + fornotice 
          else
-          flash.now[:notice] ="#{@links.length} " +  (@links.length> 1? 'links =' : 'link') + fornotice 
+           flash.now[:success] = "#{@links.length} " +  (@links.length> 1? 'links =' : 'link') + fornotice 
            @found = true
          end 
     end
@@ -61,56 +61,75 @@ class LinksController < ApplicationController
     @links = Link.find(:all)
     render :action => 'index'
   end
-
-  def upvote
-    @link = Link.find(params[:id])
+  
+  def change_vote_setup
+     @link = Link.find(params[:id])
     @user = User.find(current_user.id)
     @vote = @link.votes.build(params[:link])
-    @previous_vote = @link.votes.where(:user_id => @user.id).first
     
     @vote.user = @user
     @vote.link = @link
-    @vote.score = 1
-   		      
-   if  @previous_vote.nil?
-   			@vote.save!
-   			redirect_to(links_path, flash[:notice] => 'Your up vote was added.') 
-   else 
-      if  @previous_vote.is_score_up?
-        redirect_to(links_path, :notice => 'Already voted up on this link') 
-      else
-         @previous_vote.update_attributes!(:score => 1)
-        redirect_to(links_path, :notice =>  'Your vote have been changed to up.') 
-      end
-   end
+    flash[:alert] = nil
+    
+   @previous_vote = @link.votes.where(:user_id => @user.id).first
+  end
+  
+  def change_vote(newscore)
+        change_vote_setup
+
+           @vote.score = newscore
+           score_text = "down"
+           score_text = "up"  if newscore == 1
+
+		 if  @previous_vote.nil?
+					@vote.save!
+					redirect_to(links_path, :alert => "Your #{score_text} vote was added.") 
+		 else       
+				if  (@previous_vote.is_score_down? && newscore == 1) ||  (@previous_vote.is_score_up? && newscore == -1)
+					@previous_vote.update_attributes!(:score => newscore)
+					redirect_to(links_path, :alert =>  "Your vote have been changed to #{score_text}.") 
+				else
+					redirect_to(links_path, :alert  => "Already voted #{score_text} on this link") 
+				end
+		 end   
+  end
+
+  def upvote
+        #  change_vote_setup
+
+    change_vote(1)
+#     @vote.score = 1
+#    		      
+#    if  @previous_vote.nil?
+#    			@vote.save!
+#    			redirect_to(links_path, :alert => 'Your up vote was added.') 
+#    else       
+#       if  @previous_vote.is_score_down?
+#         @previous_vote.update_attributes!(:score => 1)
+#         redirect_to(links_path, :alert =>  'Your vote have been changed to up.') 
+#       else
+#         redirect_to(links_path, :alert  => 'Already voted up on this link') 
+#       end
+#    end
 		
   end
 
   def downvote
-    @link = Link.find(params[:id])
-    @user = User.find(current_user.id)
-    @vote = @link.votes.build(params[:link])
-    @vote.user = @user
-    @vote.link = @link
-    @vote.score = -1
-        
-    @previous_vote = @link.votes.where(:user_id => @user.id).first
-    
-    @vote.user = @user
-    @vote.link = @link
-    @vote.score = -11
-   		      
-		 if  @previous_vote.nil?
-					@vote.save!
-					redirect_to(links_path, flash[:notice] => 'Your down vote was added.') 
-		 else 
-				if  @previous_vote.is_score_down?
-					redirect_to(links_path, :notice => 'Already voted down on this link') 
-				else
-					 @previous_vote.update_attributes!(:score => -1)
-					redirect_to(links_path, :notice =>  'Your vote have been changed to down.') 
-				end
-		 end
+    change_vote(-1)
+
+#     @vote.score = -1
+#    		      
+# 		 if  @previous_vote.nil?
+# 					@vote.save!
+# 					redirect_to(links_path, :alert => 'Your down vote was added.') 
+# 		 else 
+# 				if  @previous_vote.is_score_up?
+# 				  @previous_vote.update_attributes!(:score => -1)
+# 					redirect_to(links_path, :alert =>  'Your vote have been changed to down.') 
+# 				else
+# 					redirect_to(links_path, :alert => 'Already voted down on this link') 
+# 				end
+#    end
   end
 
   end

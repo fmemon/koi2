@@ -26,7 +26,9 @@ Koi2::Application.configure do
   config.assets.compress = false
 
   # Expands the lines which load the assets
-  config.assets.debug = true
+  #config.assets.debug = true
+  
+  
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
   
@@ -56,5 +58,7 @@ Koi2::Application.configure do
 		:openssl_verify_mode => 'none',
 		:enable_starttls_auto => false
 	}
+	
+
 		
 end
