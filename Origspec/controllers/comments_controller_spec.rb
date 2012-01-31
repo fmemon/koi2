@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe UsersController do
+describe CommentsController do
 
-  describe "GET 'show'" do
+  describe "GET 'create'" do
     it "returns http success" do
-      get 'show'
+      get 'create'
       response.should be_success
     end
   end
