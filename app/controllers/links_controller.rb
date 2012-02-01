@@ -3,9 +3,10 @@ class LinksController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :search]
 
   def index
-  
+      @user = current_user
+
   # so user can submit a new link from the index page
-   @link = Link.new
+    @newlink = Link.new
     @categories = Category.all
 
   # reset values
@@ -30,7 +31,7 @@ class LinksController < ApplicationController
 
     @promoted_link = Link.promoted_link
 
-    render :index, :links => @links,   	:promoted_link => @promoted_link 
+    #render :index, :links => @links,   	:promoted_link => @promoted_link 
   end
 
   def show
@@ -39,7 +40,7 @@ class LinksController < ApplicationController
   end
 
   def new
-    @link = Link.new
+    @newlink = Link.new
     @categories = Category.all
   end
 
@@ -55,12 +56,22 @@ class LinksController < ApplicationController
   end
 
   def latest
+      @newlink = Link.new
+    @categories = Category.all
+
+      @promoted_link = Link.promoted_link
     @links = Link.latest
     render :action => 'index'
   end
 
   def talked_about
-    @links = Link.find(:all)
+        @newlink = Link.new
+    @categories = Category.all
+
+      @promoted_link = Link.promoted_link
+   # @links = Link.talked_about
+   # @links = Link.find(:all).group_by(&:comments).count
+@links = Link.popular
     render :action => 'index'
   end
   

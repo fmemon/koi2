@@ -7,11 +7,9 @@ Koi2::Application.routes.draw do
     get :hot, :on => :collection
     get :talked_about, :on => :collection
     get :search, :on => :collection
+    put :upvote, :on => :member
+    put :downvote, :on => :member
 
-    member do
-      put 'upvote'
-      put 'downvote'
-    end
 
     resources :comments
     resources :votes 

@@ -27,8 +27,14 @@ validates_presence_of :category_id, :user_id
   has_many :votes
   has_many :comments
   
-  scope :latest, order('created_at DESC').limit(10)
+  
+
+  scope :latest, order('created_at DESC').all
+ # scope :talked_about, order('updated_at DESC').all
   scope :voted_links, includes(:votes).group('links.id, votes.id').order('SUM(COALESCE(votes.score, 0)) DESC')
+  scope :popular, includes(:comments).group('links.id, comments.id').order('COUNT(comments) DESC')
+
+
 
   def to_param
     "#{id}-#{title.parameterize}"
