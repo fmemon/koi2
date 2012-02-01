@@ -2,7 +2,7 @@
   %h3= link_to @link.title, @link.url
 
 #link-show-submitter
-  submitted by: #{ link_to fu_robots(@link.user.email), @link.user }
+  submitted by: #{ link_to @link.user.name, @link.user }
 
 #link-short-url
   short-url: #{ link_to @link.short_url, @link.short_url }
