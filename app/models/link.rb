@@ -4,9 +4,23 @@ class Link < ActiveRecord::Base
    self.short_url = Googl.shorten(self.url).short_url #from Googl gem
   end
 
-  validates :url, :presence => true
-  validates :title, :presence => true,
-                    :length => { :minimum => 5, :maximum => 100 }
+email_regex = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix
+# email_regex = /\b((?#optional port)(https?|ftp|file)://)? (?#sub domain)([a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)
+# + (?#top domain)(com\b|edu\b|biz\b|gov\b|in(?:t|fo)\b|mil\b|net\b|org\b|[a-z][a-z]\b) (?#optional port)(:\d+
+# )? (?#optional path)(/[-a-z0-9_:\@&amp;?=+,.!/~*'%\$]*)* (?#not ending in)(?&lt;![.,?!]) (?#not enclosed in)(?!((?!(?:&lt;a )).)
+# *?(?:&lt;/a&gt;)) (?#or enclosed in)(?!((?!(?:&lt;!--)).)*?(?:--&gt;))/ix
+
+
+
+  validates :url,     :presence => true,
+  														:uniqueness => {:case_sensitive => false},
+															:length => {:within => 5..50},
+															:format => {:with => email_regex, :message =>"must have at least one letter and contain only letters, digits, or underscores"}
+  validates :title,   :presence => true,
+															:uniqueness => {:case_sensitive => false},
+															:length => {:within => 5..100} 
+validates_presence_of :category_id, :user_id
+
 
   belongs_to :user # foreign key - user_id
   belongs_to :category # foreign key - category_id
